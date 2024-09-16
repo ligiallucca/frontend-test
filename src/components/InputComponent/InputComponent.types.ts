@@ -7,3 +7,7 @@ export interface InputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
+
+export interface StyledInputProps {
+  error: boolean;
+}
