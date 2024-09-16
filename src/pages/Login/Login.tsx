@@ -1,5 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+
+import { useAuth } from "./../../context/AuthContext";
 
 import InputComponent from "./../../components/InputComponent/InputComponent";
 import ButtonComponent from "./../../components/ButtonComponent/ButtonComponent";
@@ -26,12 +29,15 @@ const StyledTitle = styled.h2`
   font-weight: 400;
   font-size: 2.25rem;
   text-align: center;
+  font-family: "Inter", sans-serif;
   color: ${({ theme }) => theme.colors.black};
 `;
 
 const Login = () => {
   const [inputValue, setInputValue] = useState("");
   const [isInputValid, setIsInputValid] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -42,7 +48,8 @@ const Login = () => {
   const handleClick = (e: React.FormEvent) => {
     e.preventDefault();
     if (isInputValid) {
-      console.log("botão ok");
+      login(inputValue);
+      navigate("/clients");
     }
   };
 
