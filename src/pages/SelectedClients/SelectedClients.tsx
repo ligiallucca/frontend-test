@@ -1,12 +1,11 @@
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
-import React from "react";
 
-const Clients = () => {
+const SelectedClients = () => {
   return (
-    <div style={{ width: "100%" }}>
+    <>
       <HeaderComponent />
-    </div>
+    </>
   );
 };
 
-export default Clients;
+export default SelectedClients;
