@@ -14,7 +14,6 @@ const StyledForm = styled.form`
   height: 100vh;
   display: flex;
   margin: 0 auto;
-  max-width: 82vw;
   align-items: center;
   flex-direction: column;
   justify-content: center;
