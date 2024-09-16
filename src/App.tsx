@@ -1,17 +1,26 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import Clients from "./pages/Clients/Clients";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { ThemeProvider } from "styled-components";
+import { theme } from "./config/theme";
 
-const App = () => {
+function App() {
   return (
-    <Router>
+    <ThemeProvider theme={theme}>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/clients" element={<Clients />} />
+        <Route
+          path="/clients"
+          element={
+            <ProtectedRoute>
+              <Clients />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
-    </Router>
+    </ThemeProvider>
   );
-};
+}
 
 export default App;
