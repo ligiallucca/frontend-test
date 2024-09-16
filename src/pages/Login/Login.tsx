@@ -1,6 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
-import InputComponent from "../../components/InputComponent/InputComponent";
+
+import InputComponent from "./../../components/InputComponent/InputComponent";
+import ButtonComponent from "./../../components/ButtonComponent/ButtonComponent";
 
 const StyledForm = styled.form`
   gap: 20px;
@@ -37,6 +39,13 @@ const Login = () => {
     setIsInputValid(value.trim() !== "");
   };
 
+  const handleClick = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isInputValid) {
+      console.log("botão ok");
+    }
+  };
+
   return (
     <div className="container">
       <StyledForm>
@@ -48,6 +57,11 @@ const Login = () => {
           value={inputValue}
           onChange={handleInputChange}
           errorMessage="Nome é obrigatório"
+        />
+        <ButtonComponent
+          text="Entrar"
+          onClick={handleClick}
+          disabled={!isInputValid}
         />
       </StyledForm>
     </div>
