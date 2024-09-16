@@ -14,12 +14,12 @@ const StyledForm = styled.form`
   height: 100vh;
   display: flex;
   margin: 0 auto;
-  max-width: 98vw;
+  max-width: 82vw;
   align-items: center;
   flex-direction: column;
   justify-content: center;
 
-  @media (min-width: 400px) {
+  @media (min-width: 768px) {
     max-width: 400px;
   }
 `;
@@ -54,24 +54,22 @@ const Login = () => {
   };
 
   return (
-    <div className="container">
-      <StyledForm>
-        <StyledTitle>Olá, seja bem-vindo!</StyledTitle>
-        <InputComponent
-          name="userName"
-          placeholder="Digite seu nome"
-          required
-          value={inputValue}
-          onChange={handleInputChange}
-          errorMessage="Nome é obrigatório"
-        />
-        <ButtonComponent
-          text="Entrar"
-          onClick={handleClick}
-          disabled={!isInputValid}
-        />
-      </StyledForm>
-    </div>
+    <StyledForm>
+      <StyledTitle>Olá, seja bem-vindo!</StyledTitle>
+      <InputComponent
+        name="userName"
+        placeholder="Digite seu nome"
+        required
+        value={inputValue}
+        onChange={handleInputChange}
+        errorMessage="Nome é obrigatório"
+      />
+      <ButtonComponent
+        text="Entrar"
+        onClick={handleClick}
+        disabled={!isInputValid}
+      />
+    </StyledForm>
   );
 };
 
