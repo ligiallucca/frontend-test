@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { InputProps } from "./InputComponent.types";
+import { InputProps, StyledInputProps } from "./InputComponent.types";
 
-const StyledInput = styled.input`
+const StyledInput = styled.input<StyledInputProps>`
   width: 100%;
   outline: none;
   font-size: 1.5rem;
@@ -11,7 +11,8 @@ const StyledInput = styled.input`
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
   transition: border-color 0.3s ease-in-out;
-  border: 2px solid ${({ theme }) => theme.colors.gray};
+  border: 2px solid
+    ${({ error, theme }) => (error ? theme.colors.red : theme.colors.gray)};
 
   &:focus {
     border-color: none;
@@ -19,9 +20,10 @@ const StyledInput = styled.input`
 `;
 
 const ErrorMessage = styled.span`
-  color: ${({ theme }) => theme.colors.red};
-  font-size: 0.875rem;
+  font-family: "Inter", sans-serif;
   margin-top: 4px;
+  font-size: 0.875rem;
+  color: ${({ theme }) => theme.colors.red};
 `;
 
 const InputComponent: React.FC<InputProps> = ({
@@ -54,6 +56,7 @@ const InputComponent: React.FC<InputProps> = ({
         required={required}
         value={value}
         onChange={validateInput}
+        error={!!error}
       />
       {error && <ErrorMessage>{error}</ErrorMessage>}
     </div>
