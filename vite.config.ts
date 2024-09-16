@@ -12,4 +12,13 @@ export default defineConfig({
       reporter: ["text", "html"],
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://boasorte.teddybackoffice.com.br",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
 });

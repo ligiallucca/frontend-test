@@ -7,11 +7,14 @@ const StyledHeader = styled.header`
   width: 100vw;
   display: flex;
   position: fixed;
+  top: 0;
+  left: 0;
   padding: 24px 120px;
   align-items: center;
   justify-content: space-between;
-  backgroud-color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.white};
   box-shadow: 0px 2px 2px 0px ${({ theme }) => theme.colors.blackShadow};
+  z-index: 1000;
 `;
 
 const LogoImage = styled.img`
