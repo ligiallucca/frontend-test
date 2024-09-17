@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled, { useTheme } from "styled-components";
 import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
-import { getClients } from "../../../services/clientsService";
+import { getClients, deleteClient } from "../../../services/clientsService";
 import { Client, ClientData } from "../../../services/clientsService.types";
 
 import { useSelectedClients } from "../../../context/SelectedClientsContext";
@@ -10,6 +10,7 @@ import ClientForm from "./ClientForm/ClientForm";
 import ClientsPerPage from "../components/ClientsPerPage";
 import CardComponent from "../../../components/CardComponent/CardComponent";
 import ModalComponent from "../../../components/ModalComponent/ModalComponent";
+import ButtonComponent from "../../../components/ButtonComponent/ButtonComponent";
 import IconButton from "../../../components/IconButtonComponent/IconButtonComponent";
 import ButtonOutlinedComponent from "../../../components/ButtonOutlinedComponent/ButtonOutlinedComponent";
 
@@ -88,6 +89,30 @@ const SuccessMessage = styled.div`
   text-align: center;
 `;
 
+const DeleteModalContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  text-align: center;
+
+  & p {
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+`;
+
+const DeleteModalButtonContainer = styled.div`
+  display: flex;
+  gap: 16px;
+  margin: 24px;
+
+  & button {
+    font-size: 1rem;
+  }
+`;
+
 const ClientsList: React.FC = () => {
   const theme = useTheme();
   const { addClient } = useSelectedClients();
@@ -99,6 +124,9 @@ const ClientsList: React.FC = () => {
     undefined
   );
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
+  const [clientToDelete, setClientToDelete] = useState<number | null>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] =
+    useState<boolean>(false);
 
   const fetchClients = async () => {
     try {
@@ -128,6 +156,30 @@ const ClientsList: React.FC = () => {
   const handleEditClient = (client: Client) => {
     setSelectedClient(client);
     setIsModalOpen(true);
+  };
+
+  const handleDeleteClick = (clientId: number) => {
+    setClientToDelete(clientId);
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (clientToDelete !== null) {
+      try {
+        await deleteClient(clientToDelete);
+        fetchClients();
+      } catch (error) {
+        console.error("Erro ao deletar cliente:", error);
+      } finally {
+        setClientToDelete(null);
+        setIsDeleteConfirmOpen(false);
+      }
+    }
+  };
+
+  const cancelDelete = () => {
+    setClientToDelete(null);
+    setIsDeleteConfirmOpen(false);
   };
 
   return (
@@ -184,7 +236,7 @@ const ClientsList: React.FC = () => {
                     />
                     <IconButton
                       icon={<MdDelete />}
-                      onClick={() => console.log("Delete")}
+                      onClick={() => handleDeleteClick(client.id)}
                       color={theme.colors.red}
                     />
                   </ButtonContainer>
@@ -219,6 +271,20 @@ const ClientsList: React.FC = () => {
               initialValues={selectedClient || undefined}
             />
           )
+        }
+      />
+      <ModalComponent
+        isOpen={isDeleteConfirmOpen}
+        onClose={cancelDelete}
+        modalTitle=""
+        content={
+          <DeleteModalContent>
+            <p>Você tem certeza que deseja excluir este cliente?</p>
+            <DeleteModalButtonContainer>
+              <ButtonOutlinedComponent text="Cancelar" onClick={cancelDelete} />
+              <ButtonComponent text="Confirmar" onClick={confirmDelete} />
+            </DeleteModalButtonContainer>
+          </DeleteModalContent>
         }
       />
     </Container>

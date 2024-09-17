@@ -6,11 +6,12 @@ const StyledButton = styled.button`
   width: 100%;
   border: none;
   outline: none;
-  font-size: 0.875rem;
+  cursor: pointer;
   font-weight: 700;
   border-radius: 4px;
   padding: 10px 20px;
   letter-spacing: 1px;
+  font-size: 0.875rem;
   font-family: "Inter", sans-serif;
   transition: background-color 0.3s ease-in-out;
   color: ${({ theme }) => theme.colors.primary};
