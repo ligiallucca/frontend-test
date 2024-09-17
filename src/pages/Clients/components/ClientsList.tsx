@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import styled, { useTheme } from "styled-components";
 import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
 import { getClients } from "../../../services/clientsService";
-import { Client } from "../../../services/clientsService.types";
+import { Client, ClientData } from "../../../services/clientsService.types";
 
 import { useSelectedClients } from "../../../context/SelectedClientsContext";
 
-import ClientForm from "./ClientForm";
+import ClientForm from "./ClientForm/ClientForm";
 import ClientsPerPage from "../components/ClientsPerPage";
 import CardComponent from "../../../components/CardComponent/CardComponent";
 import ModalComponent from "../../../components/ModalComponent/ModalComponent";
@@ -93,8 +93,11 @@ const ClientsList: React.FC = () => {
   const { addClient } = useSelectedClients();
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [limit, setLimit] = useState<number>(100);
+  const [limit, setLimit] = useState<number>(16);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedClient, setSelectedClient] = useState<ClientData | undefined>(
+    undefined
+  );
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
 
   const fetchClients = async () => {
@@ -120,6 +123,11 @@ const ClientsList: React.FC = () => {
       setIsModalOpen(false);
       fetchClients();
     }, 6000);
+  };
+
+  const handleEditClient = (client: Client) => {
+    setSelectedClient(client);
+    setIsModalOpen(true);
   };
 
   return (
@@ -172,7 +180,7 @@ const ClientsList: React.FC = () => {
                     />
                     <IconButton
                       icon={<MdEdit />}
-                      onClick={() => console.log("Edit")}
+                      onClick={() => handleEditClient(client)}
                     />
                     <IconButton
                       icon={<MdDelete />}
@@ -195,14 +203,21 @@ const ClientsList: React.FC = () => {
       <ModalComponent
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        modalTitle="Criar cliente"
+        modalTitle={selectedClient ? "Editar cliente" : "Criar cliente"}
         content={
           showSuccessMessage ? (
             <SuccessMessage>
-              <h3>Cliente Criado com Sucesso!</h3>
+              <h3>
+                {selectedClient
+                  ? "Cliente Editado com Sucesso!"
+                  : "Cliente Criado com Sucesso!"}
+              </h3>
             </SuccessMessage>
           ) : (
-            <ClientForm onSuccess={handleFormSuccess} />
+            <ClientForm
+              onSuccess={handleFormSuccess}
+              initialValues={selectedClient || undefined}
+            />
           )
         }
       />

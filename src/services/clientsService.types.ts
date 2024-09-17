@@ -14,6 +14,7 @@ export interface ClientsResponse {
 }
 
 export interface ClientData {
+  id: number;
   name: string;
   salary: number;
   companyValuation: number;

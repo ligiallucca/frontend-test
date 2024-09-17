@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import { createClient } from "../../../services/clientsService";
+import {
+  createClient,
+  updateClient,
+} from "../../../../services/clientsService";
+import { ClientData } from "../../../../services/clientsService.types";
 
-import InputComponent from "../../../components/InputComponent/InputComponent";
-import ButtonComponent from "../../../components/ButtonComponent/ButtonComponent";
+import InputComponent from "../../../../components/InputComponent/InputComponent";
+import ButtonComponent from "../../../../components/ButtonComponent/ButtonComponent";
 
 const StyledForm = styled.form`
   gap: 20px;
@@ -15,11 +19,22 @@ const StyledForm = styled.form`
   justify-content: center;
 `;
 
-const ClientForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
+const ClientForm: React.FC<{
+  onSuccess: () => void;
+  initialValues?: ClientData; // Atualize o tipo para incluir o id
+}> = ({ onSuccess, initialValues }) => {
   const [name, setName] = useState("");
   const [salary, setSalary] = useState("");
   const [companyValuation, setCompanyValuation] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    if (initialValues) {
+      setName(initialValues.name);
+      setSalary(initialValues.salary.toString());
+      setCompanyValuation(initialValues.companyValuation.toString());
+    }
+  }, [initialValues]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -46,15 +61,23 @@ const ClientForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
           return;
         }
 
-        await createClient({
-          name,
-          salary: numericSalary,
-          companyValuation: numericCompanyValuation,
-        });
-
-        onSuccess();
+        if (initialValues?.id) {
+          await updateClient(initialValues.id, {
+            name,
+            salary: numericSalary,
+            companyValuation: numericCompanyValuation,
+          });
+          onSuccess();
+        } else {
+          await createClient({
+            name,
+            salary: numericSalary,
+            companyValuation: numericCompanyValuation,
+          });
+          onSuccess();
+        }
       } catch (error) {
-        console.error("Erro ao criar cliente:", error);
+        console.error("Erro ao criar ou atualizar cliente:", error);
       }
     } else {
       console.log("Formulário inválido.");
@@ -89,7 +112,7 @@ const ClientForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
         errorMessage="Este campo só aceita números"
       />
       <ButtonComponent
-        text="Criar Cliente"
+        text={initialValues ? "Atualizar Cliente" : "Criar Cliente"}
         type="submit"
         disabled={!isFormValid}
       />
