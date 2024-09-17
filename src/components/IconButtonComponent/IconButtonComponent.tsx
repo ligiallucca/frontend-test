@@ -9,7 +9,9 @@ const IconButtonWrapper = styled.button<IconButtonProps>`
   border: none;
   background-color: transparent;
   cursor: pointer;
-  svg {
+
+  svg,
+  .icon {
     color: ${({ color, theme }) => color || theme.colors.black};
     font-size: 20px;
     width: 20px;
@@ -19,7 +21,7 @@ const IconButtonWrapper = styled.button<IconButtonProps>`
 
 const IconButton: React.FC<IconButtonProps> = ({ icon, onClick, color }) => {
   return (
-    <IconButtonWrapper onClick={onClick} color={color}>
+    <IconButtonWrapper onClick={onClick} color={color} icon={icon}>
       {icon}
     </IconButtonWrapper>
   );
