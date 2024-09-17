@@ -29,10 +29,16 @@ const StyledButton = styled.button`
 const ButtonComponent: React.FC<ButtonProps> = ({
   text,
   onClick,
-  disabled,
+  disabled = false,
+  type = "button",
 }) => {
   return (
-    <StyledButton id={text.toLowerCase()} onClick={onClick} disabled={disabled}>
+    <StyledButton
+      id={text.toLowerCase()}
+      onClick={onClick}
+      disabled={disabled}
+      type={type}
+    >
       {text}
     </StyledButton>
   );

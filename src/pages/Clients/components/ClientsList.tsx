@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
 import styled, { useTheme } from "styled-components";
+
 import { getClients } from "../../../services/clientsService";
 import { Client } from "../../../services/clientsService.types";
-import CardComponent from "../../../components/CardComponent/CardComponent";
-import IconButton from "../../../components/IconButtonComponent/IconButtonComponent";
+
+import ClientForm from "./ClientForm";
 import ClientsPerPage from "../components/ClientsPerPage";
+import CardComponent from "../../../components/CardComponent/CardComponent";
+import ModalComponent from "../../../components/ModalComponent/ModalComponent";
+import IconButton from "../../../components/IconButtonComponent/IconButtonComponent";
+import ButtonOutlinedComponent from "../../../components/ButtonOutlinedComponent/ButtonOutlinedComponent";
 
 const ClientDataContainer = styled.div`
   display: flex;
@@ -73,16 +78,27 @@ const ButtonContainer = styled.div`
   justify-content: space-between;
 `;
 
+const SuccessMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  text-align: center;
+`;
+
 const ClientsList: React.FC = () => {
   const theme = useTheme();
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [limit, setLimit] = useState<number>(30); // Estado para o limite de clientes por página
+  const [limit, setLimit] = useState<number>(100);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
 
   const fetchClients = async () => {
     try {
       setLoading(true);
-      const response = await getClients(limit); // Passa o limite para a função
+      const response = await getClients(limit);
       setClients(response.clients);
     } catch (error) {
       console.error("Erro ao buscar clientes:", error);
@@ -93,7 +109,16 @@ const ClientsList: React.FC = () => {
 
   useEffect(() => {
     fetchClients();
-  }, [limit]); // Dependência do limite
+  }, [limit]);
+
+  const handleFormSuccess = () => {
+    setShowSuccessMessage(true);
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+      setIsModalOpen(false);
+      fetchClients();
+    }, 6000);
+  };
 
   return (
     <Container>
@@ -159,6 +184,26 @@ const ClientsList: React.FC = () => {
           ))}
         </ClientListContainer>
       )}
+      <div style={{ maxWidth: "1190px", marginTop: "16px" }}>
+        <ButtonOutlinedComponent
+          text="Criar cliente"
+          onClick={() => setIsModalOpen(true)}
+        />
+      </div>
+      <ModalComponent
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        modalTitle="Criar cliente"
+        content={
+          showSuccessMessage ? (
+            <SuccessMessage>
+              <h3>Cliente Criado com Sucesso!</h3>
+            </SuccessMessage>
+          ) : (
+            <ClientForm onSuccess={handleFormSuccess} />
+          )
+        }
+      />
     </Container>
   );
 };

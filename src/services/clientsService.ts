@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ClientsResponse } from "./clientsService.types";
+import { ClientData, ClientsResponse } from "./clientsService.types";
 
 const API_BASE_URL = "/api";
 
@@ -12,4 +12,14 @@ export const getClients = async (
     `${API_BASE_URL}/users?page=1&limit=${limit}`
   );
   return response.data;
+};
+
+export const createClient = async (clientData: ClientData) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/users`, clientData);
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao criar cliente:", error);
+    throw error;
+  }
 };

@@ -12,3 +12,9 @@ export interface ClientsResponse {
   currentPage: number;
   totalPages: number;
 }
+
+export interface ClientData {
+  name: string;
+  salary: number;
+  companyValuation: number;
+}

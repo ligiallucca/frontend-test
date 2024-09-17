@@ -1,6 +1,5 @@
-import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
-import React from "react";
 import ClientsList from "./components/ClientsList";
+import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
 
 const Clients = () => {
   return (
