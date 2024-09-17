@@ -5,7 +5,7 @@ import { InputProps, StyledInputProps } from "./InputComponent.types";
 const StyledInput = styled.input<StyledInputProps>`
   width: 100%;
   outline: none;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   border-radius: 4px;
   padding: 14px 20px;
   box-sizing: border-box;

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
 import styled, { useTheme } from "styled-components";
-
+import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
 import { getClients } from "../../../services/clientsService";
 import { Client } from "../../../services/clientsService.types";
+
+import { useSelectedClients } from "../../../context/SelectedClientsContext";
 
 import ClientForm from "./ClientForm";
 import ClientsPerPage from "../components/ClientsPerPage";
@@ -89,6 +90,7 @@ const SuccessMessage = styled.div`
 
 const ClientsList: React.FC = () => {
   const theme = useTheme();
+  const { addClient } = useSelectedClients();
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [limit, setLimit] = useState<number>(100);
@@ -166,7 +168,7 @@ const ClientsList: React.FC = () => {
                   <ButtonContainer>
                     <IconButton
                       icon={<MdAdd />}
-                      onClick={() => console.log("Add")}
+                      onClick={() => addClient(client)}
                     />
                     <IconButton
                       icon={<MdEdit />}
