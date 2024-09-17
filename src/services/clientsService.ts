@@ -5,7 +5,7 @@ import {
   ClientsResponse,
 } from "./clientsService.types";
 
-const API_BASE_URL = "/api";
+const API_BASE_URL = process.env.VITE_API_URL;
 
 export const getClients = async (
   page: number,
