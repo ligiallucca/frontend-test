@@ -62,7 +62,8 @@ const ClientCount = styled.p`
   margin: 0;
 
   span {
-    font-weight: 700; /* Aplica o peso da fonte ao número */
+    font-weight: 700;
+    margin-right: 4px;
   }
 `;
 
@@ -113,12 +114,39 @@ const DeleteModalButtonContainer = styled.div`
   }
 `;
 
+const PaginationContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 16px;
+`;
+
+const PaginationButton = styled.button<{ isActive: boolean }>`
+  background: ${({ isActive, theme }) =>
+    isActive ? theme.colors.primary : "transparent"};
+  color: ${({ isActive, theme }) =>
+    isActive ? theme.colors.white : theme.colors.black};
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+  font-family: "Inter", sans-serif;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.white};
+  }
+`;
+
 const ClientsList: React.FC = () => {
   const theme = useTheme();
   const { addClient } = useSelectedClients();
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [limit, setLimit] = useState<number>(16);
+  const [limit, setLimit] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedClient, setSelectedClient] = useState<ClientData | undefined>(
     undefined
@@ -131,8 +159,9 @@ const ClientsList: React.FC = () => {
   const fetchClients = async () => {
     try {
       setLoading(true);
-      const response = await getClients(limit);
+      const response = await getClients(currentPage, limit);
       setClients(response.clients);
+      setTotalPages(response.totalPages);
     } catch (error) {
       console.error("Erro ao buscar clientes:", error);
     } finally {
@@ -142,7 +171,7 @@ const ClientsList: React.FC = () => {
 
   useEffect(() => {
     fetchClients();
-  }, [limit]);
+  }, [limit, currentPage]);
 
   const handleFormSuccess = () => {
     setShowSuccessMessage(true);
@@ -161,6 +190,10 @@ const ClientsList: React.FC = () => {
   const handleDeleteClick = (clientId: number) => {
     setClientToDelete(clientId);
     setIsDeleteConfirmOpen(true);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   const confirmDelete = async () => {
@@ -204,47 +237,60 @@ const ClientsList: React.FC = () => {
       {loading ? (
         <p>Carregando...</p>
       ) : (
-        <ClientListContainer>
-          {clients.map((client) => (
-            <CardComponent
-              key={client.id}
-              content={
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <ClientDataContainer>
-                    <ClientName>{client.name}</ClientName>
-                    <ClientInfo>
-                      Salário: R$
-                      {client.salary.toLocaleString("pt-BR", {
-                        minimumFractionDigits: 2,
-                      })}
-                    </ClientInfo>
-                    <ClientInfo>
-                      Empresa: R$
-                      {client.companyValuation.toLocaleString("pt-BR", {
-                        minimumFractionDigits: 2,
-                      })}
-                    </ClientInfo>
-                  </ClientDataContainer>
-                  <ButtonContainer>
-                    <IconButton
-                      icon={<MdAdd />}
-                      onClick={() => addClient(client)}
-                    />
-                    <IconButton
-                      icon={<MdEdit />}
-                      onClick={() => handleEditClient(client)}
-                    />
-                    <IconButton
-                      icon={<MdDelete />}
-                      onClick={() => handleDeleteClick(client.id)}
-                      color={theme.colors.red}
-                    />
-                  </ButtonContainer>
-                </div>
-              }
-            />
-          ))}
-        </ClientListContainer>
+        <>
+          <ClientListContainer>
+            {clients.map((client) => (
+              <CardComponent
+                key={client.id}
+                content={
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <ClientDataContainer>
+                      <ClientName>{client.name}</ClientName>
+                      <ClientInfo>
+                        Salário: R$
+                        {client.salary.toLocaleString("pt-BR", {
+                          minimumFractionDigits: 2,
+                        })}
+                      </ClientInfo>
+                      <ClientInfo>
+                        Empresa: R$
+                        {client.companyValuation.toLocaleString("pt-BR", {
+                          minimumFractionDigits: 2,
+                        })}
+                      </ClientInfo>
+                    </ClientDataContainer>
+                    <ButtonContainer>
+                      <IconButton
+                        icon={<MdAdd />}
+                        onClick={() => addClient(client)}
+                      />
+                      <IconButton
+                        icon={<MdEdit />}
+                        onClick={() => handleEditClient(client)}
+                      />
+                      <IconButton
+                        icon={<MdDelete />}
+                        onClick={() => handleDeleteClick(client.id)}
+                        color={theme.colors.red}
+                      />
+                    </ButtonContainer>
+                  </div>
+                }
+              />
+            ))}
+          </ClientListContainer>
+          <PaginationContainer>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <PaginationButton
+                key={index + 1}
+                isActive={currentPage === index + 1}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </PaginationButton>
+            ))}
+          </PaginationContainer>
+        </>
       )}
       <div style={{ maxWidth: "1190px", marginTop: "16px" }}>
         <ButtonOutlinedComponent
