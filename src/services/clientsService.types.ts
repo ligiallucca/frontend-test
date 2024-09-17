@@ -13,8 +13,13 @@ export interface ClientsResponse {
   totalPages: number;
 }
 
-export interface ClientData {
-  id: number;
+export interface ClientCreateData {
+  name: string;
+  salary: number;
+  companyValuation: number;
+}
+
+export interface ClientUpdateData {
   name: string;
   salary: number;
   companyValuation: number;

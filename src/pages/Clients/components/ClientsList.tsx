@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled, { useTheme } from "styled-components";
 import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
 import { getClients, deleteClient } from "../../../services/clientsService";
-import { Client, ClientData } from "../../../services/clientsService.types";
+import { Client } from "../../../services/clientsService.types";
 
 import { useSelectedClients } from "../../../context/SelectedClientsContext";
 
@@ -148,7 +148,7 @@ const ClientsList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedClient, setSelectedClient] = useState<ClientData | undefined>(
+  const [selectedClient, setSelectedClient] = useState<Client | undefined>(
     undefined
   );
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);

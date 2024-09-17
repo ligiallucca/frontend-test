@@ -5,7 +5,10 @@ import {
   createClient,
   updateClient,
 } from "../../../../services/clientsService";
-import { ClientData } from "../../../../services/clientsService.types";
+import {
+  ClientCreateData,
+  ClientUpdateData,
+} from "../../../../services/clientsService.types";
 
 import InputComponent from "../../../../components/InputComponent/InputComponent";
 import ButtonComponent from "../../../../components/ButtonComponent/ButtonComponent";
@@ -21,7 +24,7 @@ const StyledForm = styled.form`
 
 const ClientForm: React.FC<{
   onSuccess: () => void;
-  initialValues?: ClientData; // Atualize o tipo para incluir o id
+  initialValues?: ClientUpdateData & { id: number };
 }> = ({ onSuccess, initialValues }) => {
   const [name, setName] = useState("");
   const [salary, setSalary] = useState("");
@@ -62,18 +65,20 @@ const ClientForm: React.FC<{
         }
 
         if (initialValues?.id) {
-          await updateClient(initialValues.id, {
+          const updateData: ClientUpdateData = {
             name,
             salary: numericSalary,
             companyValuation: numericCompanyValuation,
-          });
+          };
+          await updateClient(initialValues.id, updateData);
           onSuccess();
         } else {
-          await createClient({
+          const createData: ClientCreateData = {
             name,
             salary: numericSalary,
             companyValuation: numericCompanyValuation,
-          });
+          };
+          await createClient(createData);
           onSuccess();
         }
       } catch (error) {

@@ -1,5 +1,9 @@
 import axios from "axios";
-import { ClientData, ClientsResponse } from "./clientsService.types";
+import {
+  ClientCreateData,
+  ClientUpdateData,
+  ClientsResponse,
+} from "./clientsService.types";
 
 const API_BASE_URL = "/api";
 
@@ -13,7 +17,7 @@ export const getClients = async (
   return response.data;
 };
 
-export const createClient = async (clientData: ClientData) => {
+export const createClient = async (clientData: ClientCreateData) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/users`, clientData);
     return response.data;
@@ -25,7 +29,7 @@ export const createClient = async (clientData: ClientData) => {
 
 export const updateClient = async (
   clientId: number,
-  clientData: ClientData
+  clientData: ClientUpdateData
 ) => {
   try {
     const response = await axios.patch(

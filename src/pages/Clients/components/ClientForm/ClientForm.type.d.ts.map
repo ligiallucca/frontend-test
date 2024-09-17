@@ -1,0 +1,1 @@
+{"version":3,"file":"ClientForm.type.d.ts","sourceRoot":"","sources":["ClientForm.type.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,eAAe;IAC9B,SAAS,EAAE,MAAM,IAAI,CAAC;IACtB,aAAa,CAAC,EAAE;QACd,EAAE,EAAE,MAAM,CAAC;QACX,IAAI,EAAE,MAAM,CAAC;QACb,MAAM,EAAE,MAAM,CAAC;QACf,gBAAgB,EAAE,MAAM,CAAC;KAC1B,CAAC;IACF,MAAM,CAAC,EAAE,OAAO,CAAC;CAClB"}
